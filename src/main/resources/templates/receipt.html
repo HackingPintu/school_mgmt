@@ -1,0 +1,375 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="or">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ଶୁଳ୍କ ପ୍ରାପ୍ତି ରସିଦ - ସରସ୍ୱତୀ ଶିଶୁ ବିଦ୍ୟାମନ୍ଦିର, ବଡ଼ମ୍ବା</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .receipt-container {
+            width: 750px;
+            max-width: 100%;
+            background: #fff;
+            border: 2px solid #2c3e50;
+            padding: 25px 35px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .logo-container {
+            width: 90px;
+            height: 90px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .institution-info {
+            text-align: center;
+            flex-grow: 1;
+            padding-left: 10px;
+        }
+
+        .institution-info h1 {
+            font-size: 20px;
+            color: #b30000;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .institution-info h3 {
+            font-size: 13px;
+            color: #444;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .institution-info p {
+            font-size: 11px;
+            color: #666;
+        }
+
+        /* Receipt Title */
+        .receipt-title {
+            text-align: center;
+            background: #2c3e50;
+            color: #fff;
+            padding: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            border-radius: 2px;
+        }
+
+        /* Receipt Number and Date */
+        .meta-grid {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .meta-item span {
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Student Details */
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .details-table th,
+        .details-table td {
+            border: 1px solid #bdc3c7;
+            padding: 10px 14px;
+            font-size: 14px;
+        }
+
+        .details-table th {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            text-align: left;
+            width: 40%;
+        }
+
+        .details-table td {
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .footer-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 30px;
+            padding-top: 15px;
+            gap: 15px;
+        }
+
+        .note {
+            font-size: 11px;
+            color: #7f8c8d;
+            max-width: 55%;
+            line-height: 1.6;
+        }
+
+        .signature-box {
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c3e50;
+            border-top: 1px dashed #7f8c8d;
+            width: 190px;
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            flex-shrink: 0;
+        }
+
+        .signature-img {
+            width: 110px;
+            height: 55px;
+            object-fit: contain;
+            mix-blend-mode: multiply;
+            display: block;
+            margin-bottom: 5px;
+            position: static;
+            transform: none;
+        }
+
+        /* Print */
+        @media print {
+            @page {
+                size: A4;
+                margin: 15mm;
+            }
+
+            body {
+                background: none;
+                padding: 0;
+                display: block;
+            }
+
+            .receipt-container {
+                border: 2px solid #2c3e50;
+                box-shadow: none;
+                width: 100%;
+                max-width: 100%;
+                margin: 0 auto;
+            }
+
+            .receipt-title {
+                background: #2c3e50 !important;
+                color: #fff !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .details-table th {
+                background-color: #ecf0f1 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .logo-container img,
+            .signature-img {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+
+        /* Mobile */
+        @media screen and (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .receipt-container {
+                padding: 15px;
+            }
+
+            .header {
+                gap: 5px;
+            }
+
+            .logo-container {
+                width: 65px;
+                height: 65px;
+            }
+
+            .institution-info h1 {
+                font-size: 15px;
+            }
+
+            .institution-info h3 {
+                font-size: 11px;
+            }
+
+            .institution-info p {
+                font-size: 9px;
+            }
+
+            .meta-grid {
+                font-size: 11px;
+                flex-wrap: wrap;
+            }
+
+            .details-table th,
+            .details-table td {
+                font-size: 12px;
+                padding: 8px;
+            }
+
+            .footer-section {
+                gap: 10px;
+            }
+
+            .note {
+                font-size: 9px;
+            }
+
+            .signature-box {
+                font-size: 10px;
+                width: 150px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="receipt-container">
+
+    <!-- School Header -->
+    <div class="header">
+
+        <div class="logo-container">
+            <img th:src="@{/images.jpg}"
+                 src="/images.jpg"
+                 alt="SSVM Logo">
+        </div>
+
+        <div class="institution-info">
+            <h1>ସରସ୍ୱତୀ ଶିଶୁ ବିଦ୍ୟାମନ୍ଦିର, ବଡ଼ମ୍ବା</h1>
+            <h3>ଶିକ୍ଷା ବିକାଶ ସଂସ୍ଥାନ, ଓଡ଼ିଶା</h3>
+            <p>Saraswati Sishu Vidya Mandira, Badamba</p>
+        </div>
+
+    </div>
+
+    <!-- Receipt Title -->
+    <div class="receipt-title">
+        ଶୁଳ୍କ ପ୍ରାପ୍ତି ରସିଦ (Fee Collection Receipt)
+    </div>
+
+    <!-- Receipt Information -->
+    <div class="meta-grid">
+
+        <div class="meta-item">
+            ରସିଦ ନଂ (Receipt No):
+            <span th:text="${receiptNo}">1020fcc6-4fdf-44e7-b8af-1e09f5bb41d8</span>
+        </div>
+
+        <div class="meta-item">
+            ତାରିଖ (Date):
+            <span th:text="${paymentDate}">2026-10-28</span>
+        </div>
+
+    </div>
+
+    <!-- Student Details -->
+    <table class="details-table">
+
+        <tr>
+            <th>ଛାତ୍ର/ଛାତ୍ରୀଙ୍କ ନାମ (Student Name)</th>
+            <td th:text="${studentName}">Deeptendu_Gupta</td>
+        </tr>
+
+        <tr>
+            <th>ଶ୍ରେଣୀ (Class / Section)</th>
+            <td th:text="${className}">2026-27/1</td>
+        </tr>
+
+        <tr>
+            <th>ଦେୟ ପ୍ରଣାଳୀ (Payment Mode)</th>
+            <td th:text="${paymentMode}">CASH</td>
+        </tr>
+
+        <tr>
+            <th>ପ୍ରଦତ୍ତ ପରିମାଣ (Amount Paid)</th>
+            <td>
+                ₹ <span th:text="${amountPaid}">500</span>/-
+            </td>
+        </tr>
+
+    </table>
+
+    <!-- Footer and Signature -->
+    <div class="footer-section">
+
+        <div class="note">
+            * ଦ୍ରଷ୍ଟବ୍ୟ: ଏହା ଏକ କମ୍ପ୍ୟୁଟର ଜେନେରେଟେଡ୍
+            ରସିଦ ଅଟେ, ଏଥିପାଇଁ କୌଣସି ପ୍ରକାର
+            ହସ୍ତାକ୍ଷର ଆବଶ୍ୟକ ନାହିଁ।
+        </div>
+
+        <div class="signature-box">
+
+            <img th:src="@{/signature.jpg}"
+                 src="/signature.jpg"
+                 alt="Authorized Signature"
+                 class="signature-img">
+
+            ପ୍ରାଧିକୃତ ସ୍ୱାକ୍ଷର
+            (Authorized Signatory)
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
