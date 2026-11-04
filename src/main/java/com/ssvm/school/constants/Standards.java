@@ -11,6 +11,8 @@ public enum Standards {
     FIVE,
     SIX,
     SEVEN,
-    EIGHT
+    EIGHT,
+    NINE,
+    TEN
 
 }
