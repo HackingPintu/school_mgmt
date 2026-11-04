@@ -65,7 +65,7 @@ public class AcademicYearServiceImpl implements AcademicYearService {
         }
         AcademicYear academicYearEntity = AcademicYear.builder()
                 .yearLabel(academicYear.getYearLabel())
-                .isActive(true)
+                .isActive(false)
                 .build();
         String yearLabel = academicYearRepository.save(academicYearEntity).getYearLabel();
         return AcademicYearResponseDTO.builder().academicYearName(yearLabel).build();
