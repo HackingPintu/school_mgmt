@@ -21,4 +21,8 @@ public interface StudentEnrollmentService {
     StudentEnrollment findById(String id);
 
     List<StudentEnrollment> findAll();
+
+    void removeStudentEnrollment(String id);
+
+    StudentEnrollment findByIdAndStatusTrue(String id);
 }

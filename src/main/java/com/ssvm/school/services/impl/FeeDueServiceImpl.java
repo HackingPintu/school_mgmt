@@ -6,6 +6,7 @@ import com.ssvm.school.dto.response.FeeDueResponseDTO;
 import com.ssvm.school.dto.response.FeeStructureResponseDTO;
 import com.ssvm.school.entity.FeeDue;
 import com.ssvm.school.entity.StudentEnrollment;
+import com.ssvm.school.event.StudentEnrolledEvent;
 import com.ssvm.school.repository.FeeDueRepository;
 import com.ssvm.school.services.FeeDueService;
 import com.ssvm.school.services.FeeStructureService;
@@ -13,6 +14,8 @@ import com.ssvm.school.services.StudentEnrollmentService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -20,6 +23,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@Slf4j
 public class FeeDueServiceImpl implements FeeDueService {
 
     private final FeeDueRepository feeDueRepository;
@@ -56,6 +60,12 @@ public class FeeDueServiceImpl implements FeeDueService {
         if (!feeDuesToSave.isEmpty()) {
             feeDueRepository.saveAll(feeDuesToSave);
         }
+    }
+
+    @EventListener
+    public void handleStudentEnrolledEvent(StudentEnrolledEvent event) {
+        log.info("Received StudentEnrolledEvent for ID: {}. Triggering initial fee creation.", event.enrollmentId());
+        createFeeDueInitial(event.enrollmentId());
     }
 
 

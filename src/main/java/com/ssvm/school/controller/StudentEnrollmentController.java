@@ -40,5 +40,10 @@ public class StudentEnrollmentController {
         return ResponseEntity.ok(studentEnrollmentService.findByAcademicYear(yearLabel));
     }
 
+    @PatchMapping("/remove")
+    public ResponseEntity<String> removeStudentEnrollment(@RequestParam("studentEnrollmentId") String studentEnrollmentId) {
+        studentEnrollmentService.removeStudentEnrollment(studentEnrollmentId);
+        return ResponseEntity.ok("Removed student enrollment");
+    }
 
 }
