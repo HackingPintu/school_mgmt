@@ -11,6 +11,7 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "classes")
+@ToString
 public class SchoolClass {
 
     @Id
@@ -27,6 +28,7 @@ public class SchoolClass {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_teacher_id", unique = true)
+    @ToString.Exclude
     private Teacher classTeacher;
 
 }
