@@ -1,5 +1,6 @@
 package com.ssvm.school.dto.response;
 
+import com.ssvm.school.constants.PaymentMode;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -13,7 +14,10 @@ import java.time.LocalDate;
 @Builder
 public class FeePaymentResponseDTO {
 
-    private BigDecimal amountPaid;
-    private LocalDate paidDate;
     private String receiptNo;
+    private LocalDate paymentDate;
+    private String studentName;
+    private String className;
+    private PaymentMode paymentMode;
+    private BigDecimal amountPaid;
 }

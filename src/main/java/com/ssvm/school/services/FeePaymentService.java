@@ -14,7 +14,6 @@ public interface FeePaymentService {
 
     List<FeePaymentResponseDTO> findByFeeDue(FeeDue feeDue);
 
-
-
+    FeePaymentResponseDTO getReceipt(String paymentId);
 
 }
