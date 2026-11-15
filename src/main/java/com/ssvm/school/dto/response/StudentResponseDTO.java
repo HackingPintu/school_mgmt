@@ -3,6 +3,7 @@ package com.ssvm.school.dto.response;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @SuperBuilder
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudentResponseDTO extends BaseEntityResponseDTO {
+public class StudentResponseDTO extends BaseEntityResponseDTO implements Serializable {
 
     private String fatherName;
     private String motherName;

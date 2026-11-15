@@ -11,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.jspecify.annotations.NonNull;
 import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -90,6 +91,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Tool(name = "get_paginated_student", description = "Return students with pagination")
+    @Cacheable(value = "students")
     public Page<StudentResponseDTO> getPaginatedStudents(int page, int size, String sortBy, String direction) {
         Sort.Direction sortDirection = Sort.Direction.fromString(direction.toUpperCase());
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
