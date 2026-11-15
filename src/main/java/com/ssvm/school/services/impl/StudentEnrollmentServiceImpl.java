@@ -50,7 +50,7 @@ public class StudentEnrollmentServiceImpl implements StudentEnrollmentService {
     public StudentEnrollmentResponseDTO enrollment(StudentEnrollmentRequestDTO enrollment) {
         Student student = studentService.findByIdAndStatusTrue(enrollment.getStudentId());
         SchoolClass schoolClass = schoolClassService.findByStandardAndStatusTrue(enrollment.getSchoolClass());
-        AcademicYear academicYear = academicYearService.findByYearLabelAndStatusTrue(enrollment.getAcademicYear());
+        AcademicYear academicYear = academicYearService.matchYearWithActiveYear(enrollment.getAcademicYear());
         LocalDate enrollmentDate = LocalDate.now();
         StudentEnrollment studentEnrollment = StudentEnrollment.builder()
                 .student(student)
@@ -85,10 +85,8 @@ public class StudentEnrollmentServiceImpl implements StudentEnrollmentService {
 
     @Override
     public List<StudentEnrollmentResponseDTO> findByAcademicYear(String yearLabel) {
-        AcademicYear academicYear = academicYearService.findByYearLabelAndStatusTrue(yearLabel);
-        if (academicYear == null) {
-            throw new IllegalArgumentException("Academic year is not active");
-        }
+        AcademicYear academicYear = academicYearService.findByYearLabel(yearLabel)
+                .orElseThrow(() -> new IllegalArgumentException("Academic Year Not Found"));
 
         List<StudentEnrollment> list = studentEnrollmentRepository.findByAcademicYearAndStatusTrue(academicYear);
 

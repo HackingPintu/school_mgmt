@@ -39,8 +39,8 @@ public class FeeStructureServiceImpl implements FeeStructureService {
     public FeeStructureResponseDTO createFeeStructure(FeeStructureRequestDTO feeStructureRequestDTO) {
 
         SchoolClass schoolClass = schoolClassService.findByStandardAndStatusTrue(feeStructureRequestDTO.getClassName());
-        AcademicYear academicYear = academicYearService.findByYearLabelAndStatusTrue(feeStructureRequestDTO.getAcademicYear());
-
+        AcademicYear academicYear = academicYearService.findByYearLabel(feeStructureRequestDTO.getAcademicYear())
+                .orElseThrow(() -> new EntityNotFoundException("Academic Year Not Found"));
         FeeStructure feeStructure = FeeStructure.builder()
                 .schoolClass(schoolClass)
                 .academicYear(academicYear)
