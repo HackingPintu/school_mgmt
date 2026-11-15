@@ -72,24 +72,54 @@ public class AcademicYearServiceImpl implements AcademicYearService {
     }
 
     @Override
-    public void updateAcademicYear(AcademicYearRequestDTO academicYear) {
+    @Transactional
+    public void updateAcademicYear(AcademicYearRequestDTO academicYear, AcademicYearRequestDTO updatedAcademicYear) {
+        log.info("Updating academic year {}.", updatedAcademicYear.getYearLabel());
+        log.info("Academic year {}.", academicYear.getYearLabel());
         Optional<AcademicYear> existingAcademicYear = this.findByYearLabel(academicYear.getYearLabel());
-        existingAcademicYear.ifPresent(year -> year.setYearLabel(academicYear.getYearLabel()));
+        if (existingAcademicYear.isEmpty()) {
+            throw new EntityNotFoundException("Academic year not found");
+        }
+        if (findByYearLabel(updatedAcademicYear.getYearLabel()).isPresent()) {
+            throw new IllegalArgumentException("Cannot update to already existing academic year");
+        }
+        existingAcademicYear.get().setYearLabel(updatedAcademicYear.getYearLabel());
+        academicYearRepository.save(existingAcademicYear.get());
+
     }
 
     @Override
-    public void updateStatusByYearLabel(AcademicYearRequestDTO academicYear, boolean status) {
+    @Transactional
+    public void updateStatusByYearLabel(AcademicYearRequestDTO academicYear) {
         Optional<AcademicYear> existingAcademicYear = this.findByYearLabel(academicYear.getYearLabel());
-        existingAcademicYear.ifPresent(year -> year.setActive(status));
+        if (existingAcademicYear.isEmpty()) {
+            throw new IllegalArgumentException("Academic year not found");
+        }
+        AcademicYear activeYear = findActiveYear();
+        if (activeYear == null) {
+            existingAcademicYear.get().setActive(true);
+            return;
+        }
+        if (activeYear.getYearLabel().equals(academicYear.getYearLabel())) {
+            throw new IllegalArgumentException("Academic year already active");
+        }
+        existingAcademicYear.get().setActive(true);
+        activeYear.setActive(false);
+        academicYearRepository.save(activeYear);
     }
 
-    @Override
-    public AcademicYear findByYearLabelAndStatusTrue(String yearLabel) {
-        return academicYearRepository.findByYearLabelAndIsActiveTrue(yearLabel).orElseThrow(() -> new EntityNotFoundException("No academic year found"));
-    }
 
     @Override
-    public List<AcademicYear> findByIsActiveTrue() {
+    public AcademicYear findActiveYear() {
         return academicYearRepository.findByIsActiveTrue();
+    }
+
+    @Override
+    public AcademicYear matchYearWithActiveYear(String yearLabel) {
+        AcademicYear academicYear = findActiveYear();
+        if (!academicYear.getYearLabel().equals(yearLabel)) {
+            throw new IllegalStateException("Academic year is not active. \n Current academic year: " + academicYear.getYearLabel());
+        }
+        return academicYear;
     }
 }

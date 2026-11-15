@@ -34,6 +34,7 @@ public class AcademicYearController {
         List<AcademicYearResponseDTO> academicYearResponseDTOs = academicYearEntities.stream()
                 .map(academicYear -> AcademicYearResponseDTO.builder()
                         .academicYearName(academicYear.getYearLabel())
+                        .isActive(academicYear.isActive())
                         .build())
                 .toList();
 
@@ -57,18 +58,27 @@ public class AcademicYearController {
         academicYearService.deleteByYearLabel(yearLabel.trim());
     }
 
-    @PatchMapping
+    @PatchMapping("/update")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> updateAcademicYear(@RequestBody AcademicYearRequestDTO academicYear) {
-        academicYearService.updateAcademicYear(academicYear);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> updateAcademicYear(
+            @RequestParam @Pattern(regexp = "^\\d{4}-\\d{2}$", message = "Invalid current year format") String currentYearLabel,
+            @RequestParam @Pattern(regexp = "^\\d{4}-\\d{2}$", message = "Invalid new year format") String newYearLabel) {
+
+        AcademicYearRequestDTO currentDto = new AcademicYearRequestDTO();
+        currentDto.setYearLabel(currentYearLabel);
+
+        AcademicYearRequestDTO updatedDto = new AcademicYearRequestDTO();
+        updatedDto.setYearLabel(newYearLabel);
+
+        academicYearService.updateAcademicYear(currentDto, updatedDto);
+        return ResponseEntity.ok("Updated to : " + newYearLabel);
     }
 
-    @PatchMapping("/deactivate")
+
+    @PatchMapping("/activate")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> updateStatusByYearLabel(@RequestBody AcademicYearRequestDTO academicYear,
-                                                     @RequestParam(required = false) boolean status) {
-        academicYearService.updateStatusByYearLabel(academicYear, status);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> setActiveYear(@RequestBody AcademicYearRequestDTO academicYear) {
+        academicYearService.updateStatusByYearLabel(academicYear);
+        return ResponseEntity.ok("Active year has been updated to " + academicYear.getYearLabel());
     }
 }

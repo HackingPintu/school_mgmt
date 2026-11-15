@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class AcademicYearResponseDTO {
 
     String academicYearName;
+    boolean isActive;
 
 }

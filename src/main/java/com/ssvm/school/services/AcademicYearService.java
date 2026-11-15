@@ -17,12 +17,12 @@ public interface AcademicYearService {
 
     AcademicYearResponseDTO createAcademicYear(AcademicYearRequestDTO academicYear);
 
-    void updateAcademicYear(AcademicYearRequestDTO academicYear);
+    void updateAcademicYear(AcademicYearRequestDTO academicYear, AcademicYearRequestDTO updatedAcademicYear);
 
-    void updateStatusByYearLabel(AcademicYearRequestDTO academicYear, boolean status);
+    void updateStatusByYearLabel(AcademicYearRequestDTO academicYear);
 
-    AcademicYear findByYearLabelAndStatusTrue(String yearLabel);
+    AcademicYear findActiveYear();
 
-    List<AcademicYear> findByIsActiveTrue();
+    AcademicYear matchYearWithActiveYear(String yearLabel);
 
 }
